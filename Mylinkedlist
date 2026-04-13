@@ -1,0 +1,354 @@
+import java.util.Iterator;
+
+/**
+ * MyLinkedList - doubly linked list implementation of MyList.
+ *
+ 
+ *
+ * @param <T> type of elements stored
+ */
+public class MyLinkedList<T> implements MyList<T> {
+
+    
+    private class MyNode<E> {
+        E data;           // the actual value stored
+        MyNode<E> next;   // pointer to next node
+        MyNode<E> prev;   // pointer to previous node
+
+        MyNode(E data) {
+            this.data = data;
+            this.next = null;
+            this.prev = null;
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    // FIELDS
+    // ─────────────────────────────────────────────
+
+    private MyNode<T> head; // first node in the list
+    private MyNode<T> tail; // last node in the list
+    private int size;       // number of nodes
+
+    /**
+     * Constructor - creates an empty linked list.
+     */
+    public MyLinkedList() {
+        head = null;
+        tail = null;
+        size = 0;
+    }
+
+
+
+    private MyNode<T> getNode(int index) {
+        checkIndex(index);
+        MyNode<T> current;
+        if (index < size / 2) {
+            // Start from head if closer to front
+            current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            // Start from tail if closer to back
+            current = tail;
+            for (int i = size - 1; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
+    private void checkIndex(int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
+    }
+
+   
+    @Override
+    public void add(T item) {
+        addLast(item);
+    }
+
+    @Override
+    public void addFirst(T item) {
+        MyNode<T> newNode = new MyNode<>(item);
+        if (head == null) {
+            // List was empty
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.next = head;
+            head.prev = newNode;
+            head = newNode;
+        }
+        size++;
+    }
+
+  
+    @Override
+    public void addLast(T item) {
+        MyNode<T> newNode = new MyNode<>(item);
+        if (tail == null) {
+            // List was empty
+            head = newNode;
+            tail = newNode;
+        } else {
+            newNode.prev = tail;
+            tail.next = newNode;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    
+    @Override
+    public void add(int index, T item) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index);
+        }
+        if (index == 0) {
+            addFirst(item);
+        } else if (index == size) {
+            addLast(item);
+        } else {
+            MyNode<T> newNode = new MyNode<>(item);
+            MyNode<T> current = getNode(index);
+
+            // Insert newNode before current
+            MyNode<T> prevNode = current.prev;
+            prevNode.next = newNode;
+            newNode.prev = prevNode;
+            newNode.next = current;
+            current.prev = newNode;
+            size++;
+        }
+    }
+
+ 
+    @Override
+    public void set(int index, T item) {
+        getNode(index).data = item;
+    }
+
+    @Override
+    public T get(int index) {
+        return getNode(index).data;
+    }
+
+    
+    @Override
+    public T getFirst() {
+        if (head == null) throw new RuntimeException("List is empty");
+        return head.data;
+    }
+
+    @Override
+    public T getLast() {
+        if (tail == null) throw new RuntimeException("List is empty");
+        return tail.data;
+    }
+
+   
+    
+    @Override
+    public void remove(int index) {
+        checkIndex(index);
+        if (index == 0) {
+            removeFirst();
+        } else if (index == size - 1) {
+            removeLast();
+        } else {
+            MyNode<T> toRemove = getNode(index);
+            // Bypass toRemove by linking its neighbors directly
+            toRemove.prev.next = toRemove.next;
+            toRemove.next.prev = toRemove.prev;
+            // Nullify pointers to prevent memory leaks / loops
+            toRemove.next = null;
+            toRemove.prev = null;
+            size--;
+        }
+    }
+
+    /**
+     * Removes the first element.
+     */
+    @Override
+    public void removeFirst() {
+        if (head == null) throw new RuntimeException("List is empty");
+        if (head == tail) {
+            // Only one element
+            head = null;
+            tail = null;
+        } else {
+            head = head.next;
+            head.prev = null;
+        }
+        size--;
+    }
+
+    /**
+     * Removes the last element.
+     */
+    @Override
+    public void removeLast() {
+        if (tail == null) throw new RuntimeException("List is empty");
+        if (head == tail) {
+            // Only one element
+            head = null;
+            tail = null;
+        } else {
+            tail = tail.prev;
+            tail.next = null;
+        }
+        size--;
+    }
+
+    // ─────────────────────────────────────────────
+    // SEARCH METHODS
+    // ─────────────────────────────────────────────
+
+    /**
+     * Returns the first index where object appears, or -1 if not found.
+     */
+    @Override
+    public int indexOf(Object object) {
+        MyNode<T> current = head;
+        for (int i = 0; i < size; i++) {
+            if (current.data.equals(object)) return i;
+            current = current.next;
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the last index where object appears, or -1 if not found.
+     */
+    @Override
+    public int lastIndexOf(Object object) {
+        MyNode<T> current = tail;
+        for (int i = size - 1; i >= 0; i--) {
+            if (current.data.equals(object)) return i;
+            current = current.prev;
+        }
+        return -1;
+    }
+
+    /**
+     * Returns true if object exists in the list.
+     */
+    @Override
+    public boolean exists(Object object) {
+        return indexOf(object) != -1;
+    }
+
+    // ─────────────────────────────────────────────
+    // SORT (Bubble Sort)
+    // ─────────────────────────────────────────────
+
+    /**
+     * Sorts elements in ascending order using bubble sort.
+     * Swaps the DATA inside nodes (not the nodes themselves).
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void sort() {
+        if (size <= 1) return;
+        boolean swapped;
+        do {
+            swapped = false;
+            MyNode<T> current = head;
+            while (current.next != null) {
+                Comparable<T> left = (Comparable<T>) current.data;
+                if (left.compareTo(current.next.data) > 0) {
+                    // Swap the data values (not the nodes)
+                    T temp = current.data;
+                    current.data = current.next.data;
+                    current.next.data = temp;
+                    swapped = true;
+                }
+                current = current.next;
+            }
+        } while (swapped);
+    }
+
+    // ─────────────────────────────────────────────
+    // OTHER METHODS
+    // ─────────────────────────────────────────────
+
+    /**
+     * Returns a plain Object[] copy of all elements.
+     */
+    @Override
+    public Object[] toArray() {
+        Object[] result = new Object[size];
+        MyNode<T> current = head;
+        for (int i = 0; i < size; i++) {
+            result[i] = current.data;
+            current = current.next;
+        }
+        return result;
+    }
+
+    /**
+     * Removes all elements from the list.
+     */
+    @Override
+    public void clear() {
+        head = null;
+        tail = null;
+        size = 0;
+    }
+
+    /**
+     * Returns the number of elements in the list.
+     */
+    @Override
+    public int size() {
+        return size;
+    }
+
+    // ─────────────────────────────────────────────
+    // ITERATOR
+    // ─────────────────────────────────────────────
+
+    /**
+     * Returns an iterator for use in for-each loops.
+     */
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private MyNode<T> current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public T next() {
+                T value = current.data;
+                current = current.next;
+                return value;
+            }
+        };
+    }
+
+    /**
+     * Returns string representation like [1, 2, 3]
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[");
+        MyNode<T> current = head;
+        while (current != null) {
+            sb.append(current.data);
+            if (current.next != null) sb.append(", ");
+            current = current.next;
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+}
