@@ -1,0 +1,168 @@
+/**
+ * Main.java - Tests for all data structures.
+ * Run this to verify everything works correctly.
+ */
+public class Main {
+
+    public static void main(String[] args) {
+        testMyArrayList();
+        testMyLinkedList();
+        testMyStack();
+        testMyQueue();
+        testMyMinHeap();
+    }
+
+    // ══════════════════════════════════════════════
+    // TEST MyArrayList
+    // ══════════════════════════════════════════════
+    static void testMyArrayList() {
+        System.out.println("═══ Testing MyArrayList ═══");
+        MyArrayList<Integer> list = new MyArrayList<>();
+
+        list.add(10);
+        list.add(30);
+        list.add(20);
+        System.out.println("After add 10,30,20: " + list);         // [10, 30, 20]
+
+        list.addFirst(5);
+        System.out.println("After addFirst(5):  " + list);         // [5, 10, 30, 20]
+
+        list.addLast(99);
+        System.out.println("After addLast(99):  " + list);         // [5, 10, 30, 20, 99]
+
+        list.add(2, 15);
+        System.out.println("After add(2,15):    " + list);         // [5, 10, 15, 30, 20, 99]
+
+        System.out.println("get(0): " + list.get(0));              // 5
+        System.out.println("getFirst: " + list.getFirst());        // 5
+        System.out.println("getLast: " + list.getLast());          // 99
+
+        list.set(0, 100);
+        System.out.println("After set(0,100):   " + list);         // [100, 10, 15, 30, 20, 99]
+
+        list.remove(0);
+        System.out.println("After remove(0):    " + list);         // [10, 15, 30, 20, 99]
+
+        list.removeFirst();
+        System.out.println("After removeFirst:  " + list);         // [15, 30, 20, 99]
+
+        list.removeLast();
+        System.out.println("After removeLast:   " + list);         // [15, 30, 20]
+
+        System.out.println("indexOf(30): " + list.indexOf(30));    // 1
+        System.out.println("exists(20): " + list.exists(20));      // true
+        System.out.println("exists(99): " + list.exists(99));      // false
+
+        list.sort();
+        System.out.println("After sort:         " + list);         // [15, 20, 30]
+
+        System.out.println("size: " + list.size());                // 3
+
+        list.clear();
+        System.out.println("After clear, size: " + list.size());   // 0
+        System.out.println();
+    }
+
+    // ══════════════════════════════════════════════
+    // TEST MyLinkedList
+    // ══════════════════════════════════════════════
+    static void testMyLinkedList() {
+        System.out.println("═══ Testing MyLinkedList ═══");
+        MyLinkedList<String> list = new MyLinkedList<>();
+
+        list.add("B");
+        list.add("D");
+        list.addFirst("A");
+        list.addLast("E");
+        list.add(2, "C");
+        System.out.println("After adds:       " + list);          // [A, B, C, D, E]
+
+        System.out.println("get(2): " + list.get(2));             // C
+        System.out.println("getFirst: " + list.getFirst());       // A
+        System.out.println("getLast: " + list.getLast());         // E
+
+        list.set(2, "X");
+        System.out.println("After set(2,X):   " + list);          // [A, B, X, D, E]
+
+        list.remove(2);
+        System.out.println("After remove(2):  " + list);          // [A, B, D, E]
+
+        list.removeFirst();
+        list.removeLast();
+        System.out.println("After removeFst/Lst: " + list);       // [B, D]
+
+        System.out.println("indexOf(D): " + list.indexOf("D"));   // 1
+        System.out.println("exists(B): " + list.exists("B"));     // true
+
+        list.add("A");
+        list.sort();
+        System.out.println("After sort:       " + list);          // [A, B, D]
+
+        // Test iterator
+        System.out.print("Iterator: ");
+        for (String s : list) System.out.print(s + " ");
+        System.out.println();
+
+        list.clear();
+        System.out.println("After clear, size: " + list.size());  // 0
+        System.out.println();
+    }
+
+    // ══════════════════════════════════════════════
+    // TEST MyStack
+    // ══════════════════════════════════════════════
+    static void testMyStack() {
+        System.out.println("═══ Testing MyStack ═══");
+        MyStack<Integer> stack = new MyStack<>();
+
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+        System.out.println("After push 1,2,3: " + stack);         // [3, 2, 1]
+        System.out.println("peek: " + stack.peek());              // 3
+        System.out.println("pop: " + stack.pop());                // 3
+        System.out.println("pop: " + stack.pop());                // 2
+        System.out.println("size: " + stack.size());              // 1
+        System.out.println("isEmpty: " + stack.isEmpty());        // false
+        System.out.println();
+    }
+
+    // ══════════════════════════════════════════════
+    // TEST MyQueue
+    // ══════════════════════════════════════════════
+    static void testMyQueue() {
+        System.out.println("═══ Testing MyQueue ═══");
+        MyQueue<String> queue = new MyQueue<>();
+
+        queue.enqueue("first");
+        queue.enqueue("second");
+        queue.enqueue("third");
+        System.out.println("After enqueue 3: " + queue);          // [first, second, third]
+        System.out.println("peek: " + queue.peek());              // first
+        System.out.println("dequeue: " + queue.dequeue());        // first
+        System.out.println("dequeue: " + queue.dequeue());        // second
+        System.out.println("size: " + queue.size());              // 1
+        System.out.println();
+    }
+
+    // ══════════════════════════════════════════════
+    // TEST MyMinHeap
+    // ══════════════════════════════════════════════
+    static void testMyMinHeap() {
+        System.out.println("═══ Testing MyMinHeap ═══");
+        MyMinHeap<Integer> heap = new MyMinHeap<>();
+
+        heap.insert(5);
+        heap.insert(3);
+        heap.insert(8);
+        heap.insert(1);
+        heap.insert(4);
+        System.out.println("After inserts: " + heap);             // [1, ...]
+        System.out.println("getMin: " + heap.getMin());           // 1
+        System.out.println("extractMin: " + heap.extractMin());   // 1
+        System.out.println("extractMin: " + heap.extractMin());   // 3
+        System.out.println("extractMin: " + heap.extractMin());   // 4
+        System.out.println("remaining: " + heap);                 // [5, 8]
+        System.out.println();
+    }
+}
