@@ -1,0 +1,33 @@
+/**
+ * MyStack - LIFO (Last In, First Out) stack.
+ * Based on MyLinkedList: addFirst/removeFirst are O(1).
+ */
+public class MyStack<T> {
+
+    private MyLinkedList<T> list = new MyLinkedList<>();
+
+    /** Push item onto the top of the stack. */
+    public void push(T item) {
+        list.addFirst(item);
+    }
+
+    /** Remove and return the top item. */
+    public T pop() {
+        if (isEmpty()) throw new RuntimeException("Stack is empty");
+        T value = list.getFirst();
+        list.removeFirst();
+        return value;
+    }
+
+    /** Look at the top item without removing it. */
+    public T peek() {
+        if (isEmpty()) throw new RuntimeException("Stack is empty");
+        return list.getFirst();
+    }
+
+    public boolean isEmpty() { return list.size() == 0; }
+    public int size()        { return list.size(); }
+
+    @Override
+    public String toString() { return "Stack(top→)" + list.toString(); }
+}
